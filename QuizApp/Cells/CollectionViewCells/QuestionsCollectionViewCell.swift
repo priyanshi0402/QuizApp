@@ -31,6 +31,24 @@ class QuestionsCollectionViewCell: UICollectionViewCell {
         super.awakeFromNib()
         self.setupTableView()
     }
+    
+    override var accessibilityLabel: String? {
+            get {
+                return lblTitle.text
+            }
+            set {
+                // Ignore setting accessibility label for this view
+            }
+        }
+    
+    override var accessibilityTraits: UIAccessibilityTraits {
+            get {
+                return .staticText
+            }
+            set {
+                // Ignore setting accessibility traits for this view
+            }
+        }
 
 }
 
@@ -41,6 +59,11 @@ extension QuestionsCollectionViewCell {
         self.tblView.delegate = self
         
         self.tblView.registerCell(ofType: QuizOptionsTableViewCell.self)
+        
+//        self.tblView.isAccessibilityElement = true
+//        self.tblView.accessibilityTraits = .button
+//        self.tblView.accessibilityLabel = "Question"
+//        self.tblView.accessibilityHint = "Double tap to answer"
     }
     
     func setupOptions() {
@@ -49,6 +72,7 @@ extension QuestionsCollectionViewCell {
         options.shuffle()
         self.options = options
     }
+        
 }
 
 extension QuestionsCollectionViewCell: UITableViewDelegate, UITableViewDataSource {
@@ -61,8 +85,11 @@ extension QuestionsCollectionViewCell: UITableViewDelegate, UITableViewDataSourc
         let option = self.options[indexPath.row]
         cell.lblOptions.text = option
         cell.lblOptions.backgroundColor = .systemGray6
+        cell.isAccessibilityElement = true // Enable VoiceOver accessibility for table view cells
+                cell.accessibilityTraits = .button
+        cell.lblOptions.isAccessibilityElement = true
         
-        debugPrint(#function)
+//        debugPrint(#function)
         return cell
     }
     

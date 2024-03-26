@@ -58,7 +58,6 @@ extension UIViewController {
         alert.addAction(UIAlertAction(title: "Ok", style: .cancel))
         self.presentVC(vc: alert)
     }
-
     
 }
 

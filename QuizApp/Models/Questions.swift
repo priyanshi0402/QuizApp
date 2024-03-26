@@ -42,25 +42,6 @@ enum Difficulty: String, Codable {
     case easy = "easy"
     case medium = "medium"
     case hard = "hard"
-    
-//    var baseURL: String {
-//        return "https://opentdb.com/api.php"
-//    }
-//    
-//    var path: String {
-//        switch self {
-//        case .easy:
-//            "?amount=20&difficulty=easy"
-//        case .medium:
-//            "?amount=20&difficulty=medium"
-//        case .hard:
-//            "?amount=20&difficulty=hard"
-//        }
-//    }
-//    
-//    var url: URL? {
-//        return URL(string: baseURL+path)
-//    }
 }
 
 enum TypeEnum: String, Codable {

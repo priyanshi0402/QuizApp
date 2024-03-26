@@ -12,7 +12,7 @@ class QuizQuestionsVC: UIViewController {
     
     @IBOutlet weak var lblCount: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
-    @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var collectionView: NonScrollingCollectionView!
     
     var selectedLevel: Difficulty = .easy
     private let viewModel = QuizViewModel()
@@ -31,6 +31,13 @@ class QuizQuestionsVC: UIViewController {
         
     }
 
+}
+
+
+class NonScrollingCollectionView: UICollectionView {
+    override func accessibilityScroll(_ direction: UIAccessibilityScrollDirection) -> Bool {
+        return false // Prevent scrolling when VoiceOver is active
+    }
 }
 
 // MARK: - Setup Views
@@ -68,19 +75,35 @@ extension QuizQuestionsVC {
             return
         }
         
-        self.collectionView.scrollToItem(at: IndexPath(row: (visibleIndexPath?.row ?? 0)+1, section: 0), at: .right, animated: true)
+        let nextIndexPath = IndexPath(row: currentQuestionIndex, section: 0)
+        
+        self.collectionView.scrollToItem(at: nextIndexPath, at: .right, animated: true)
+        
+        // Announce the new question for VoiceOver
+        if let cell = self.collectionView.cellForItem(at: nextIndexPath) as? QuestionsCollectionViewCell {
+            UIAccessibility.post(notification: .announcement, argument: cell.lblTitle.text)
+            UIAccessibility.post(notification: .layoutChanged, argument: nil)
+            
+//            self.speakOptions(cell: cell)
+        }
         
         self.setupProgressBar()
+    }
+    
+    private func speakOptions(cell: QuestionsCollectionViewCell) {
+        for tableVieCell in cell.tblView.visibleCells {
+            if let cell = tableVieCell as? QuizOptionsTableViewCell {
+                UIAccessibility.post(notification: .announcement, argument: cell.lblOptions.text)
+            }
+//            Thread.sleep(forTimeInterval: 0.5)
+        }
+        
     }
     
     @objc func updateProgressView() {
         
         progressBar.progress += 0.01
         progressBar.setProgress(progressBar.progress, animated: true)
-        
-        if(progressBar.progress == 1.0) {
-            self.scrollToNextQuestion()
-        }
         
     }
 }
@@ -119,6 +142,7 @@ extension QuizQuestionsVC: UICollectionViewDelegate, UICollectionViewDataSource,
         let data = viewModel.questions.value[indexPath.row]
         cell.lblTitle.text = data.question
         cell.question = data
+        debugPrint(indexPath.item+1, "cellForItemAt")
         self.lblCount.text = "\(indexPath.item+1)/\(self.viewModel.questions.value.count)"
         cell.delegate = self
                 

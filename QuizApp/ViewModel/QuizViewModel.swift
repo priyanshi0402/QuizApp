@@ -10,6 +10,7 @@ import Foundation
 import Combine
 
 enum APIEndPoint {
+    
     case easyLevel
     case mediumLevel
     case hardLevel

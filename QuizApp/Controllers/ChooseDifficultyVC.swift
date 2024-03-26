@@ -30,7 +30,6 @@ extension ChooseDifficultyVC {
     }
     
     @IBAction func btnMediumClicked(_ sender: Any) {
-        
         let quizVc = StoryboardScene.Main.quizQuestionsVC.instantiate()
         quizVc.selectedLevel = .medium
         self.pushVc(vc: quizVc)
